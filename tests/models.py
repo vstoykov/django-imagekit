@@ -37,6 +37,12 @@ class ProcessedImageFieldWithSpecModel(models.Model):
     processed = ProcessedImageField(spec=Thumbnail, upload_to='p')
 
 
+class ProcessedImageFieldWithWidthHeightModel(models.Model):
+    processed = ProcessedImageField([SmartCrop(50, 50)], width_field='width', height_field='height', upload_to='p')
+    width = models.PositiveIntegerField()
+    height = models.PositiveIntegerField()
+
+
 class CountingCacheFileStrategy:
     def __init__(self):
         self.on_existence_required_count = 0

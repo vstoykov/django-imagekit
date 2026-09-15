@@ -8,7 +8,8 @@ from imagekit.processors import SmartCrop
 
 from . import imagegenerators  # noqa
 from .models import (ImageModel, ProcessedImageFieldModel,
-                     ProcessedImageFieldWithSpecModel)
+                     ProcessedImageFieldWithSpecModel,
+                     ProcessedImageFieldWithWidthHeightModel)
 from .utils import get_image_file
 
 
@@ -32,6 +33,20 @@ def test_model_processedimagefield_with_spec():
 
     assert instance.processed.width == 100
     assert instance.processed.height == 60
+
+
+@pytest.mark.django_db(transaction=True)
+def test_model_processedimagefield_with_width_and_height():
+    instance = ProcessedImageFieldWithWidthHeightModel()
+    with File(get_image_file()) as file:
+        instance.processed.save('whatever.jpeg', file)
+        # instance.processed.update_dimension_fields()
+        instance.save()
+
+    assert instance.processed.width == 50
+    assert instance.processed.height == 50
+    assert instance.width == 50
+    assert instance.height == 50
 
 
 @pytest.mark.django_db(transaction=True)
